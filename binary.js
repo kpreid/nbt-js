@@ -85,7 +85,7 @@
 	        };
 	        p.setBuffer = function(data){
 	            if(data){
-	                for(var l, i = l = data.length, b = this.buffer = new Array(l); i; b[l - i] = data.charCodeAt(--i));
+	                for(var l, i = l = data.length, b = this.buffer = new Array(l); i; b[l - i] = data[--i]);
 	                this.bigEndian && b.reverse();
 	            }
 	        };
@@ -128,7 +128,7 @@
 
 		var getBits = function(bits) {
 			var buffer = self.buffer(Math.ceil(bits / 8));
-			return buffer.toString('binary');
+			return buffer;
 		};
 	
 		this.byte = function() {
@@ -139,7 +139,7 @@
 
 		this.buffer = function(count) {
 			var end = Math.min(buffer.length, pos + count);
-			var slice = buffer.slice(pos, end);		
+			var slice = buffer.subarray(pos, end);		
 			pos = end;
 			return slice;
 		};
@@ -154,7 +154,11 @@
 		};
 
 		this.utf8 = function(count) {
-			return this.buffer(count).toString('utf8');
+		  // TODO(kpreid): This is ISO-8859-1, not UTF-8
+		  var buffer = this.buffer(count);
+		  for (var a = []; a.length < buffer.length;)
+		    a[a.length] = String.fromCharCode(buffer[a.length]);
+		  return a.join("");
 		};
 	};
 }).apply(exports || window);

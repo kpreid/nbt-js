@@ -60,12 +60,12 @@
 
 		this[tagTypes.byteArray] = function() {
 			var length = this.int();
-			var bytes = [];
+			var bytes = new Uint8Array(length);
 			var i;
 			for (i = 0; i < length; i++) {
-				bytes.push(this.byte());
+				bytes[i] = this.byte();
 			}
-			return new Buffer(bytes);
+			return bytes;
 		};
 
 		this[tagTypes.string] = function() {
